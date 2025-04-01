@@ -9,9 +9,8 @@ from sklearn.preprocessing import StandardScaler
 import pandas as pd
 
 class ImprovedGIN(nn.Module):
-    def __init__(self, in_dim, hidden_dim, num_classes):
+    def __init__(self, in_dim=6, hidden_dim=64, num_classes=4):
         super().__init__()
-        # Updated architecture to handle correct input dimensions
         self.conv1 = GINConv(nn.Sequential(
             nn.Linear(in_dim, hidden_dim),
             nn.BatchNorm1d(hidden_dim),
@@ -37,9 +36,6 @@ class ImprovedGIN(nn.Module):
 
     def forward(self, data):
         x, edge_index = data.x, data.edge_index
-        # Reshape input if necessary
-        if x.dim() > 2:
-            x = x.view(x.size(0), -1)  # Flatten time series features
         x = self.conv1(x, edge_index)
         x = self.conv2(x, edge_index)
         batch = torch.arange(x.size(0), device=x.device)
@@ -80,7 +76,6 @@ def compute_kendall_correlation(data):
     return correlation_matrix
 
 def print_model_parameters(model):
-    """Enhanced parameter display function"""
     param_info = []
     for name, param in model.named_parameters():
         param_info.append({

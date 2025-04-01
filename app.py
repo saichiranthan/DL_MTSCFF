@@ -10,6 +10,7 @@ import os
 import zipfile
 import base64
 from sklearn.preprocessing import StandardScaler
+import torch.nn.functional as F
 
 # --- Mobile-Friendly CSS ---
 st.markdown("""
@@ -58,8 +59,15 @@ st.markdown("""
 # --- Model Loading ---
 @st.cache_resource
 def load_model():
-    model = ImprovedGIN(in_dim=6, hidden_dim=64, num_classes=4)
-    model.load_state_dict(torch.load("SaiChiranthan-221AI035-model.pth", map_location="cpu"))
+    model = ImprovedGIN(in_dim=6)  # Original input dimension
+    try:
+        model.load_state_dict(torch.load("SaiChiranthan-221AI035-model.pth", 
+                                       map_location="cpu", 
+                                       weights_only=True))
+        st.success("Model loaded successfully!")
+    except Exception as e:
+        st.error(f"Error loading model: {str(e)}")
+        st.warning("Using randomly initialized model")
     model.eval()
     return model
 
@@ -92,17 +100,19 @@ if uploaded_file:
     data = process_uploaded_file(uploaded_file)
     model = load_model()
     
-    # Compute features
-    cwt_data = compute_cwt(data)
-    cwt_tensor = torch.tensor(cwt_data, dtype=torch.float32)
+    # Compute mean across time dimension (6 sensors × 100 timesteps -> 6 features)
+    mean_features = np.mean(data, axis=2)  # Shape: (n_samples, 6)
+    
+    # Compute correlation using original data
     kendall_corr = compute_kendall_correlation(data)
     
-    # Build graph
+    # Build graph (using sensor correlations)
     edge_index = torch.tensor([[i, j] for i in range(6) for j in range(6) if i != j], dtype=torch.long).t().contiguous()
     edge_attr = torch.tensor([kendall_corr[i, j] for i in range(6) for j in range(6) if i != j], dtype=torch.float32)
     
+    # Create graph data with mean features (6 features per sample)
     graph_data = Data(
-        x=cwt_tensor.mean(dim=-1).clone().detach(),
+        x=torch.tensor(mean_features, dtype=torch.float32),
         edge_index=edge_index,
         edge_attr=edge_attr
     )
@@ -161,7 +171,7 @@ if uploaded_file:
         st.markdown("### 📦 Generating Full Report...")
         
         with st.spinner("This may take a moment..."):
-            # Create outputs
+            # Create outputs directory
             os.makedirs("report", exist_ok=True)
             
             # 1. Predictions
