@@ -160,10 +160,10 @@ st.markdown("""
 # --- App Header with Enhanced Styling ---
 st.markdown("""
     <div class="header-container">
-        <h1 class="header-title">Department of IT</h1>
+        <h1 class="header-title">Department of Information Technology</h1>
         <h2 class="header-subtitle">NITK Surathkal</h2>
-        <h3 style="font-weight: 400; font-size: 1.2rem; margin-bottom: 0.5rem;">Multivariate Time Series Classification</h3>
-        <p style="margin: 0;">By Abhishek N B, Sai Chiranthan HM</p>
+        <h3 style="font-weight: 400; font-size: 1.2rem; margin-bottom: 0.5rem;">Multivariate Time Series Classification with Feature Fusion</h3>
+        <p style="margin: 0;">By Abhishek N B (221AI003), Sai Chiranthan HM (221AI035) </p>
     </div>
     """, unsafe_allow_html=True)
 
