@@ -24,3 +24,4 @@ protobuf==5.29.1
 pydantic==2.10.3
 PyYAML==6.0.2
 tqdm==4.67.1
+torch_geometric==2.6.1
