@@ -597,14 +597,10 @@ else:
         <h2>Welcome to the Time Series Classifier</h2>
         <p style="font-size: 1.2rem; margin-bottom: 2rem;">Upload a .ts file to begin your analysis</p>
         
-        <div style="max-width: 500px; margin: 0 auto; text-align: left; background: #f8f9fa; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-            <h4>Getting Started:</h4>
-            <ol>
-                <li>Use the file uploader in the sidebar to upload your .ts file</li>
-                <li>The model will automatically process your data</li>
-                <li>Choose between quick results or detailed analysis</li>
-                <li>Download a full report with all insights</li>
-            </ol>
-        </div>
-    </div>
+                INSTRUCTIONS:
+                1. Upload your multivariate time series data in .ts format
+                2. The model will automatically classify the activity
+                3.Choose between quick results or detailed analysis
+                4. View detailed analysis and download the report
+                5. For more information, check the sidebar
     """, unsafe_allow_html=True)
